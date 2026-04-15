@@ -1,4 +1,4 @@
-import '../lib/index-min.js';
+import '../lib/index.js';
 
 const pickrContainer = document.querySelector('.pickr-container');
 const themeContainer = document.querySelector('.theme-container');
@@ -25,7 +25,7 @@ const themes = [
         swatches,
         components: {
             preview: true, opacity: true, hue: true,
-            interaction: {hex: true, rgba: true, hsva: true, input: true, clear: true, save: true}
+            interaction: { hex: true, rgba: true, hsva: true, input: true, clear: true, save: true }
         }
     }],
     ['monolith', 'pickr-monolith', {
@@ -33,7 +33,7 @@ const themes = [
         defaultRepresentation: 'HEXA',
         components: {
             preview: true, opacity: true, hue: true,
-            interaction: {input: true, clear: true, save: true}
+            interaction: { input: true, clear: true, save: true }
         }
     }],
     ['nano', 'pickr-nano', {
@@ -41,12 +41,15 @@ const themes = [
         defaultRepresentation: 'HEXA',
         components: {
             preview: true, opacity: true, hue: true,
-            interaction: {input: true, clear: true, save: true}
+            interaction: { input: true, clear: true, save: true }
         }
     }]
 ];
 
 const buttons = [];
+/**
+ * @type {Pickr}
+ */
 let current = null;
 
 for (const [label, tag, config] of themes) {
@@ -62,7 +65,7 @@ for (const [label, tag, config] of themes) {
         }
 
         current = document.createElement(tag);
-        current.config = {...config, default: '#42445a'};
+        current.config = { ...config, default: '' };
         pickrContainer.appendChild(current);
 
         for (const name of ['init', 'change', 'changestop', 'save', 'clear', 'cancel', 'swatchselect']) {

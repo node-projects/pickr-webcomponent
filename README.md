@@ -219,7 +219,7 @@ component itself.
 | Event          | `detail.value`                            | Fired when |
 |----------------|-------------------------------------------|------------|
 | `init`         | `undefined`                               | Component is ready after connection. |
-| `change`       | `{color, source}`                         | Color changed (not yet applied). `source` is `slider`, `input` or `swatch`. |
+| `change`       | `{color, source}`                         | Color changed (not yet applied). `color` is `HSVaColor` or `null`; `source` is `slider`, `input` or `swatch`. |
 | `changestop`   | source string                             | User stopped dragging / typing. |
 | `save`         | `HSVaColor` or `null`                     | Save button clicked (`null` after clear). |
 | `clear`        | `undefined`                               | Clear button clicked. |
@@ -229,7 +229,7 @@ component itself.
 ```js
 el.addEventListener('change', e => {
     const {color, source} = e.detail.value;
-    console.log('changed to', color.toRGBA().toString(0), 'via', source);
+    console.log('changed to', color ? color.toRGBA().toString(0) : 'null', 'via', source);
 });
 
 el.addEventListener('save', e => {
@@ -243,12 +243,15 @@ Pickr stores color in HSVa internally and exposes converters:
 
 ```js
 const c = el.getColor();
-c.toHSVA();  // [h, s, v, a]
-c.toHSLA();  // [h, s, l, a]
-c.toRGBA();  // [r, g, b, a]
-c.toHEXA();  // ['FF','AA','22', ...]
-c.toCMYK();  // [c, m, y, k]
-c.clone();
+
+if (c) {
+    c.toHSVA();  // [h, s, v, a]
+    c.toHSLA();  // [h, s, l, a]
+    c.toRGBA();  // [r, g, b, a]
+    c.toHEXA();  // ['FF','AA','22', ...]
+    c.toCMYK();  // [c, m, y, k]
+    c.clone();
+}
 ```
 
 Each returned array has an overridden `toString()`:
@@ -264,10 +267,10 @@ Web components are regular DOM nodes, so you interact with them as such.
 
 | Method | Description |
 |---|---|
-| `el.setColor(str, silent?)` | Parse a color string (or `null` to clear). Returns `true` if accepted. |
+| `el.setColor(str, silent?)` | Parse a color string, or clear when passed `null`, `''` or `'null'`. Returns `true` if accepted. |
 | `el.setHSVA(h, s, v, a, silent?)` | Set color directly. Returns `true` if accepted. |
-| `el.getColor()` | Current `HSVaColor`. |
-| `el.getSelectedColor()` | Last saved `HSVaColor`. |
+| `el.getColor()` | Current `HSVaColor` or `null`. |
+| `el.getSelectedColor()` | Last saved `HSVaColor` or `null`. |
 | `el.setColorRepresentation(type)` | Switch the input-field format (`HEX`, `RGBA`, …). |
 | `el.getColorRepresentation()` | Current format. |
 | `el.applyColor(silent?)` | Same as pressing Save. |
